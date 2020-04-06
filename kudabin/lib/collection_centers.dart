@@ -29,10 +29,24 @@ class _CollectionPointsState extends State<CollectionPoints> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Collection Centers'),
+        title:
+            Text('Collection Centers', style: TextStyle(color: Colors.white)),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.notifications_none, color: Colors.white),
+            onPressed: null,
+            color: Colors.white,
+          ),
+          IconButton(
+            icon: Icon(Icons.more_vert, color: Colors.white),
+            onPressed: null,
+            color: Colors.white,
+          )
+        ],
+        iconTheme: new IconThemeData(color: Colors.white),
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
-       drawer: SideDrawer(),
+      drawer: SideDrawer(),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -44,8 +58,11 @@ class _CollectionPointsState extends State<CollectionPoints> {
             title: Text('List'),
           ),
         ],
+        backgroundColor: Theme.of(context).primaryColor ,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Theme.of(context).accentColor,
       ),
     );
   }
