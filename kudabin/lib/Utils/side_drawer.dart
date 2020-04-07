@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kudabin/Utils/app_logo.dart';
 import 'package:kudabin/collection_centers.dart';
+import 'package:kudabin/complaints.dart';
+import 'package:kudabin/profile.dart';
+import 'package:kudabin/requests.dart';
 import 'package:kudabin/welcomePage.dart';
 
 class SideDrawer extends StatelessWidget {
@@ -14,6 +17,7 @@ class SideDrawer extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 AppLogo(
+                  fs: 30,
                   colr: Colors.white,
                 ),
                 SizedBox(height: 10),
@@ -61,6 +65,8 @@ class SideDrawer extends StatelessWidget {
             leading: Icon(Icons.insert_comment),
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Complaints()));
             },
           ),
           ListTile(
@@ -68,6 +74,8 @@ class SideDrawer extends StatelessWidget {
             leading: Icon(Icons.directions_car),
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Requests()));
             },
           ),
           ListTile(
@@ -75,13 +83,14 @@ class SideDrawer extends StatelessWidget {
             leading: Icon(Icons.account_circle),
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()));
             },
           ),
           ListTile(
             title: Text('Logout'),
             leading: Icon(Icons.exit_to_app),
             onTap: () {
-              // Navigator.push(context, MaterialPageRoute(builder: (context)=> WelcomePage()));
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => WelcomePage()));
             },
