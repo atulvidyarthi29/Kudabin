@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kudabin/ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/app_logo.dart';
 import 'package:kudabin/collection_centers.dart';
 import 'package:kudabin/complaints.dart';
@@ -7,6 +8,10 @@ import 'package:kudabin/requests.dart';
 import 'package:kudabin/welcomePage.dart';
 
 class SideDrawer extends StatelessWidget {
+  final MainModel model;
+
+  SideDrawer(this.model);
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -57,7 +62,7 @@ class SideDrawer extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CollectionPoints()));
+                  MaterialPageRoute(builder: (context) => CollectionPoints(model)));
             },
           ),
           ListTile(
@@ -66,7 +71,7 @@ class SideDrawer extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Complaints()));
+                  MaterialPageRoute(builder: (context) => Complaints(model)));
             },
           ),
           ListTile(
@@ -75,7 +80,7 @@ class SideDrawer extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Requests()));
+                  context, MaterialPageRoute(builder: (context) => Requests(model)));
             },
           ),
           ListTile(
@@ -84,7 +89,7 @@ class SideDrawer extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()));
+                  MaterialPageRoute(builder: (context) => ProfilePage(model)));
             },
           ),
           ListTile(
@@ -92,7 +97,7 @@ class SideDrawer extends StatelessWidget {
             leading: Icon(Icons.exit_to_app),
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => WelcomePage()));
+                  MaterialPageRoute(builder: (context) => WelcomePage(model)));
             },
           ),
         ],

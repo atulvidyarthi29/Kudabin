@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kudabin/Utils/app_logo.dart';
 import 'package:kudabin/collection_centers.dart';
 import 'package:kudabin/signup.dart';
-import 'package:kudabin/welcomePage.dart';
 
+import 'ScopedModels/main_model.dart';
 import 'Widget/bezierContainer.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title}) : super(key: key);
+  final MainModel model;
+
+  LoginPage(this.model, {Key key, this.title}) : super(key: key);
 
   final String title;
 
@@ -17,7 +18,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   Widget _entryField(String title, {bool isPassword = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
@@ -46,7 +46,9 @@ class _LoginPageState extends State<LoginPage> {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => CollectionPoints()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => CollectionPoints(widget.model)));
       },
       child: Container(
         height: 50,
@@ -67,7 +69,8 @@ class _LoginPageState extends State<LoginPage> {
               colors: [Color(0xfffbb448), Color(0xfff7892b)]),
         ),
         padding: const EdgeInsets.all(10.0),
-        child: Text('Login', style: TextStyle(fontSize: 20, color: Colors.white)),
+        child:
+            Text('Login', style: TextStyle(fontSize: 20, color: Colors.white)),
       ),
     );
   }
@@ -169,8 +172,10 @@ class _LoginPageState extends State<LoginPage> {
           ),
           InkWell(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SignUpPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SignUpPage(widget.model)));
             },
             child: Text(
               'Register',
@@ -182,30 +187,6 @@ class _LoginPageState extends State<LoginPage> {
           )
         ],
       ),
-    );
-  }
-
-  Widget _title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-          text: 'd',
-          style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.display1,
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-            color: Color(0xffe46b10),
-          ),
-          children: [
-            TextSpan(
-              text: 'ev',
-              style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-            TextSpan(
-              text: 'rnz',
-              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
-            ),
-          ]),
     );
   }
 
@@ -235,7 +216,9 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 110,
                 ),
-                AppLogo(colr: Theme.of(context).primaryColor,),
+                AppLogo(
+                  colr: Theme.of(context).primaryColor,
+                ),
                 SizedBox(
                   height: 50,
                 ),

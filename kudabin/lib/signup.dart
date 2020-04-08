@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:kudabin/ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/app_logo.dart';
 import 'package:kudabin/Widget/bezierContainer.dart';
 import 'package:kudabin/collection_centers.dart';
 import 'package:kudabin/loginPage.dart';
 
 class SignUpPage extends StatefulWidget {
-  SignUpPage({Key key, this.title}) : super(key: key);
+  final MainModel model;
+
+  SignUpPage(this.model, {Key key, this.title}) : super(key: key);
 
   final String title;
 
@@ -15,27 +17,6 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  Widget _backButton() {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
-            ),
-            Text('Back',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _entryField(String title, {bool isPassword = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
@@ -63,8 +44,10 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _submitButton() {
     return InkWell(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => CollectionPoints()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CollectionPoints(widget.model)));
       },
       child: Container(
         height: 50,
@@ -85,8 +68,8 @@ class _SignUpPageState extends State<SignUpPage> {
               colors: [Color(0xfffbb448), Color(0xfff7892b)]),
         ),
         padding: const EdgeInsets.all(10.0),
-        child:
-            Text('Register Now', style: TextStyle(fontSize: 20, color: Colors.white)),
+        child: Text('Register Now',
+            style: TextStyle(fontSize: 20, color: Colors.white)),
       ),
     );
   }
@@ -107,8 +90,10 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           InkWell(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => LoginPage(widget.model)));
             },
             child: Text(
               'Login',
@@ -120,30 +105,6 @@ class _SignUpPageState extends State<SignUpPage> {
           )
         ],
       ),
-    );
-  }
-
-  Widget _title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-          text: 'd',
-          style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.display1,
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-            color: Color(0xffe46b10),
-          ),
-          children: [
-            TextSpan(
-              text: 'ev',
-              style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-            TextSpan(
-              text: 'rnz',
-              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
-            ),
-          ]),
     );
   }
 
@@ -175,7 +136,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   flex: 3,
                   child: SizedBox(),
                 ),
-                AppLogo(colr: Theme.of(context).primaryColor,),
+                AppLogo(
+                  colr: Theme.of(context).primaryColor,
+                ),
                 SizedBox(
                   height: 50,
                 ),

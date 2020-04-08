@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:kudabin/ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/app_logo.dart';
 import 'package:kudabin/loginPage.dart';
 import 'package:kudabin/signup.dart';
 
 class WelcomePage extends StatefulWidget {
-  WelcomePage({Key key, this.title}) : super(key: key);
+  final MainModel model;
+  WelcomePage(this.model,{Key key, this.title}) : super(key: key);
 
   final String title;
 
@@ -18,7 +19,7 @@ class _WelcomePageState extends State<WelcomePage> {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
+            context, MaterialPageRoute(builder: (context) => LoginPage(widget.model)));
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -46,7 +47,7 @@ class _WelcomePageState extends State<WelcomePage> {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignUpPage()));
+            context, MaterialPageRoute(builder: (context) => SignUpPage(widget.model)));
       },
       child: Container(
         width: MediaQuery.of(context).size.width,

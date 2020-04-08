@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kudabin/welcomePage.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-// import 'collection_centers.dart';
+import 'ScopedModels/main_model.dart';
 
 void main() => runApp(KudaBin());
 
@@ -13,17 +14,21 @@ class KudaBin extends StatefulWidget {
 }
 
 class _KudaBinState extends State<KudaBin> {
+  final _model = MainModel();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Color(0xffe46b10),
-        accentColor: Color(0xff0f03fc),
-        textTheme: TextTheme(body1: TextStyle(color: Colors.purple)),
-      ),
-      home: WelcomePage(),
-      debugShowCheckedModeBanner: false
+    return ScopedModel<MainModel>(
+      model: _model,
+      child: MaterialApp(
+          theme: ThemeData(
+            brightness: Brightness.light,
+            primaryColor: Color(0xffe46b10),
+            accentColor: Color(0xff0f03fc),
+            textTheme: TextTheme(body1: TextStyle(color: Colors.purple)),
+          ),
+          home: WelcomePage(_model),
+          debugShowCheckedModeBanner: false),
     );
   }
 }

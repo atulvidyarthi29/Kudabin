@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kudabin/Utils/side_drawer.dart';
 
+import 'ScopedModels/main_model.dart';
+
 class ProfilePage extends StatefulWidget {
+  final MainModel model;
+
+  ProfilePage(this.model);
+
   @override
   State<StatefulWidget> createState() {
     return _ProfilePageState();
@@ -49,9 +55,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         borderRadius: BorderRadius.all(
                           Radius.circular(5),
                         ),
+                        color: Colors.white,
                       ),
                       height: 80,
-                      color: Colors.white,
                       margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
                     ),
                   ],
@@ -72,16 +78,38 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
           Container(
-            height: 50,
             child: Center(
                 child: Text(
               'Atul Vidyarthi',
-              style: TextStyle(fontSize: 20, color: Colors.black),
+              style: TextStyle(fontSize: 22, color: Colors.black),
             )),
+          ),
+          SizedBox(height: 10),
+          Container(
+            child: Center(
+                child: Text(
+              'Customer',
+              style: TextStyle(fontSize: 16, color: Colors.black),
+            )),
+          ),
+          SizedBox(height: 10),
+          Container(
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.location_on),
+                  Text(
+                    "  " + 'P.C. Colony, Kankarbagh, Patna',
+                    style: TextStyle(fontSize: 22, color: Colors.black),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
-      drawer: SideDrawer(),
+      drawer: SideDrawer(widget.model),
       floatingActionButton: FloatingActionButton(
         onPressed: null,
         child: Icon(Icons.edit),

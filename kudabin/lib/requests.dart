@@ -4,7 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kudabin/Utils/side_drawer.dart';
 
+import 'ScopedModels/main_model.dart';
+
 class Requests extends StatefulWidget {
+  final MainModel model;
+
+  Requests(this.model);
+
   @override
   State<StatefulWidget> createState() {
     return _RequestsState();
@@ -16,8 +22,8 @@ class _RequestsState extends State<Requests> {
   static List<Widget> _widgetOptions = <Widget>[
     TrackMap(),
     ListView(
-        children: <Widget>[Text("data"), Text("data")],
-      )
+      children: <Widget>[Text("data"), Text("data")],
+    )
   ];
 
   void _onItemTapped(int index) {
@@ -46,7 +52,7 @@ class _RequestsState extends State<Requests> {
         iconTheme: new IconThemeData(color: Colors.white),
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
-      drawer: SideDrawer(),
+      drawer: SideDrawer(widget.model),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
