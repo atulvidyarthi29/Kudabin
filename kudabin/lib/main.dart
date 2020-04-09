@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:kudabin/welcomePage.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:google_map_location_picker/generated/i18n.dart'
+    as location_picker;
 
 import 'ScopedModels/main_model.dart';
 
@@ -27,6 +30,16 @@ class _KudaBinState extends State<KudaBin> {
             accentColor: Color(0xff0f03fc),
             textTheme: TextTheme(body1: TextStyle(color: Colors.purple)),
           ),
+          localizationsDelegates: const [
+            location_picker.S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const <Locale>[
+            Locale('en', ''),
+            Locale('ar', ''),
+          ],
           home: WelcomePage(_model),
           debugShowCheckedModeBanner: false),
     );

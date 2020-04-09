@@ -57,9 +57,50 @@ class _CollectionCenterMapState extends State<CollectionCenterMap> {
   List<Marker> allMarkers = [];
   Completer<GoogleMapController> _controller = Completer();
 
+  @override
+  void initState() {
+    super.initState();
+    allMarkers.add(Marker(
+        markerId: MarkerId('Patna'),
+        draggable: false,
+        position: LatLng(25.5941, 85.1376)));
+    allMarkers.add(Marker(
+        markerId: MarkerId('Delhi'),
+        draggable: false,
+        position: LatLng(28.7041, 77.1025)));
+    allMarkers.add(Marker(
+        markerId: MarkerId('Lucknow'),
+        draggable: false,
+        position: LatLng(26.8467, 80.9462)));
+    allMarkers.add(Marker(
+        markerId: MarkerId('Darbhanga'),
+        draggable: false,
+        position: LatLng(26.1542, 85.8918)));
+    allMarkers.add(Marker(
+        markerId: MarkerId('Kanpur'),
+        draggable: false,
+        position: LatLng(26.4499, 80.3319)));
+    allMarkers.add(Marker(
+        markerId: MarkerId('Ahemdabad'),
+        draggable: false,
+        position: LatLng(23.0225, 72.5714)));
+    allMarkers.add(Marker(
+        markerId: MarkerId('Rachi'),
+        draggable: false,
+        position: LatLng(23.3441, 85.3096)));
+    allMarkers.add(Marker(
+        markerId: MarkerId('Indore'),
+        draggable: false,
+        position: LatLng(22.7196, 75.8577)));
+    allMarkers.add(Marker(
+        markerId: MarkerId('Gaya'),
+        draggable: false,
+        position: LatLng(24.7914, 85.0002)));
+  }
+
   final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
+    target: LatLng(24.7914, 85.0002),
+    zoom: 10,
   );
 
   @override
@@ -89,7 +130,7 @@ class _CollectionCenterMapState extends State<CollectionCenterMap> {
           markerId: MarkerId('current location'),
           draggable: false,
           position: LatLng(position.latitude, position.longitude),
-          icon: BitmapDescriptor.defaultMarker,
+          icon: BitmapDescriptor.defaultMarkerWithHue(25),
         ),
       );
       print(allMarkers);

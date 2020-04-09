@@ -7,6 +7,8 @@ import 'package:kudabin/profile.dart';
 import 'package:kudabin/requests.dart';
 import 'package:kudabin/welcomePage.dart';
 
+import '../profile_edit.dart';
+
 class SideDrawer extends StatelessWidget {
   final MainModel model;
 
@@ -41,7 +43,12 @@ class SideDrawer extends StatelessWidget {
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                         FlatButton.icon(
-                          onPressed: null,
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProfileEdit()));
+                          },
                           icon: Icon(Icons.edit, color: Colors.white),
                           label: Text("Edit Profile",
                               style: TextStyle(color: Colors.white)),
@@ -61,8 +68,10 @@ class SideDrawer extends StatelessWidget {
             leading: Icon(Icons.store_mall_directory),
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CollectionPoints(model)));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CollectionPoints(model)));
             },
           ),
           ListTile(
@@ -79,8 +88,8 @@ class SideDrawer extends StatelessWidget {
             leading: Icon(Icons.directions_car),
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Requests(model)));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Requests(model)));
             },
           ),
           ListTile(

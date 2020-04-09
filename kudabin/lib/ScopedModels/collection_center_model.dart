@@ -9,7 +9,9 @@ class CollectionCenterModel extends Model {
     return List.from(colCenters);
   }
 
-  void fetchCenter() {}
+  void fetchCenter() {
+
+  }
 
   void addCenter() {}
 

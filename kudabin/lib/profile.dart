@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kudabin/Utils/side_drawer.dart';
+import 'package:kudabin/profile_edit.dart';
 
 import 'ScopedModels/main_model.dart';
 
@@ -111,7 +112,10 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       drawer: SideDrawer(widget.model),
       floatingActionButton: FloatingActionButton(
-        onPressed: null,
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => ProfileEdit()));
+        },
         child: Icon(Icons.edit),
         backgroundColor: Theme.of(context).accentColor,
       ),
