@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:kudabin/ScopedModels/main_model.dart';
 
 import 'package:kudabin/Utils/side_drawer.dart';
 
-import 'ScopedModels/main_model.dart';
 
 class CollectionPoints extends StatefulWidget {
   final MainModel model;
@@ -40,13 +41,17 @@ class _CollectionPointsState extends State<CollectionPoints> {
         ],
         iconTheme: new IconThemeData(color: Colors.white),
       ),
-      body: CollectionCenterMap(),
+      body: CollectionCenterMap(widget.model),
       drawer: SideDrawer(widget.model),
     );
   }
 }
 
 class CollectionCenterMap extends StatefulWidget {
+  final MainModel model;
+
+  CollectionCenterMap(this.model);
+
   @override
   State<StatefulWidget> createState() {
     return _CollectionCenterMapState();
@@ -55,47 +60,32 @@ class CollectionCenterMap extends StatefulWidget {
 
 class _CollectionCenterMapState extends State<CollectionCenterMap> {
   List<Marker> allMarkers = [];
+  LocationResult _pickedLocation;
   Completer<GoogleMapController> _controller = Completer();
 
   @override
   void initState() {
     super.initState();
-    allMarkers.add(Marker(
-        markerId: MarkerId('Patna'),
-        draggable: false,
-        position: LatLng(25.5941, 85.1376)));
-    allMarkers.add(Marker(
-        markerId: MarkerId('Delhi'),
-        draggable: false,
-        position: LatLng(28.7041, 77.1025)));
-    allMarkers.add(Marker(
-        markerId: MarkerId('Lucknow'),
-        draggable: false,
-        position: LatLng(26.8467, 80.9462)));
-    allMarkers.add(Marker(
-        markerId: MarkerId('Darbhanga'),
-        draggable: false,
-        position: LatLng(26.1542, 85.8918)));
-    allMarkers.add(Marker(
-        markerId: MarkerId('Kanpur'),
-        draggable: false,
-        position: LatLng(26.4499, 80.3319)));
-    allMarkers.add(Marker(
-        markerId: MarkerId('Ahemdabad'),
-        draggable: false,
-        position: LatLng(23.0225, 72.5714)));
-    allMarkers.add(Marker(
-        markerId: MarkerId('Rachi'),
-        draggable: false,
-        position: LatLng(23.3441, 85.3096)));
-    allMarkers.add(Marker(
-        markerId: MarkerId('Indore'),
-        draggable: false,
-        position: LatLng(22.7196, 75.8577)));
-    allMarkers.add(Marker(
-        markerId: MarkerId('Gaya'),
-        draggable: false,
-        position: LatLng(24.7914, 85.0002)));
+    widget.model.fetchCenter();
+    widget.model.collectionCenters.forEach((center) {
+      allMarkers.add(Marker(
+          markerId: MarkerId(center.id.toString()),
+          draggable: false,
+          onTap: () {
+            showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return Container(
+                    padding: EdgeInsets.all(10),
+                    child: Center(
+                      child: Text(center.description),
+                    ),
+                  );
+                });
+          },
+          icon: BitmapDescriptor.defaultMarkerWithHue(150),
+          position: LatLng(center.latitude, center.longitude)));
+    });
   }
 
   final CameraPosition _kGooglePlex = CameraPosition(
@@ -113,11 +103,46 @@ class _CollectionCenterMapState extends State<CollectionCenterMap> {
         },
         markers: Set.from(allMarkers),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _getToCurrentLocation,
-        child: Icon(Icons.location_searching),
+      floatingActionButton: Column(
+        children: <Widget>[
+          SizedBox(
+            height: 30,
+          ),
+          FloatingActionButton(
+            heroTag: null,
+            onPressed: _pickLocation,
+            child: Icon(Icons.add_location),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          FloatingActionButton(
+            heroTag: null,
+            onPressed: _getToCurrentLocation,
+            child: Icon(Icons.location_searching),
+          ),
+        ],
       ),
     );
+  }
+
+  Future<void> _pickLocation() async {
+    LocationResult result = await showLocationPicker(
+      context,
+      'AIzaSyCb4Hq0N7PkpdBhX-MKq4Hl16eC4x-7qfE',
+      initialCenter: LatLng(31.1975844, 29.9598339),
+      myLocationButtonEnabled: true,
+      layersButtonEnabled: true,
+    );
+    setState(() {
+      _pickedLocation = result;
+      allMarkers.add(Marker(
+        markerId: MarkerId("newId"),
+        draggable: false,
+        position: _pickedLocation.latLng,
+        onTap: null,
+      ));
+    });
   }
 
   Future<void> _getToCurrentLocation() async {
@@ -130,7 +155,6 @@ class _CollectionCenterMapState extends State<CollectionCenterMap> {
           markerId: MarkerId('current location'),
           draggable: false,
           position: LatLng(position.latitude, position.longitude),
-          icon: BitmapDescriptor.defaultMarkerWithHue(25),
         ),
       );
       print(allMarkers);

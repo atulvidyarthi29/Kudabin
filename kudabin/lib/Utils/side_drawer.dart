@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kudabin/ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/app_logo.dart';
-import 'package:kudabin/collection_centers.dart';
-import 'package:kudabin/complaints.dart';
-import 'package:kudabin/profile.dart';
-import 'package:kudabin/requests.dart';
-import 'package:kudabin/welcomePage.dart';
+import 'package:kudabin/pages/collection_centers.dart';
+import 'package:kudabin/pages/complaints.dart';
+import 'package:kudabin/pages/profile.dart';
+import 'package:kudabin/pages/requests.dart';
+import 'package:kudabin/pages/welcomePage.dart';
 
-import '../profile_edit.dart';
+import 'package:kudabin/pages/profile_edit.dart';
 
 class SideDrawer extends StatelessWidget {
   final MainModel model;

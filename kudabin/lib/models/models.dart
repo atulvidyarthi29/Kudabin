@@ -1,11 +1,11 @@
 class Users {
-  int id;
   String username;
   String email;
   String firstName;
   String lastName;
   String dob;
   String gender;
+  String password;
   String mobileNo;
   String address;
   String aadharNo;
@@ -13,10 +13,13 @@ class Users {
   String userType;
 
   Users({
-    this.id,
+    this.username,
     this.email,
     this.firstName,
     this.lastName,
+    this.dob,
+    this.gender,
+    this.password,
     this.mobileNo,
     this.address,
     this.aadharNo,
@@ -40,11 +43,13 @@ class CollectionAgent {
 
 class CollectionCenter {
   int id;
+  String tag;
   double latitude;
   double longitude;
   String description;
 
   CollectionCenter({
+    this.tag,
     this.id,
     this.latitude,
     this.longitude,

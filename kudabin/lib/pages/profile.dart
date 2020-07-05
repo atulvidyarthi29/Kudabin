@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kudabin/ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/side_drawer.dart';
-import 'package:kudabin/profile_edit.dart';
-
-import 'ScopedModels/main_model.dart';
+import 'package:kudabin/pages/profile_edit.dart';
 
 class ProfilePage extends StatefulWidget {
   final MainModel model;

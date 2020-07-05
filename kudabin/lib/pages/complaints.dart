@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:kudabin/ScopedModels/main_model.dart';
 
-import 'ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/side_drawer.dart';
+import 'package:kudabin/Utils/status_button.dart';
 
-import 'Utils/status_button.dart';
-import 'complaint_details.dart';
-import 'complaint_post.dart';
+import 'package:kudabin/pages/complaint_details.dart';
+import 'package:kudabin/pages/complaint_post.dart';
 
 class Complaints extends StatefulWidget {
   final MainModel model;
@@ -57,20 +57,22 @@ class _ComplaintsState extends State<Complaints> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  widget.model.allComplaints.elementAt(index).ticketNo,
+                  widget.model.allComplaints.elementAt(index).ticketNo +
+                      " " +
+                      widget.model.allComplaints.elementAt(index).title,
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.black,
                   ),
                 ),
-                Text(
-                  widget.model.allComplaints.elementAt(index).title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.black,
-                  ),
-                ),
+//                Text(
+//                  widget.model.allComplaints.elementAt(index).title,
+//                  style: TextStyle(
+//                    fontWeight: FontWeight.bold,
+//                    fontSize: 18,
+//                    color: Colors.black,
+//                  ),
+//                ),
                 Text(
                   widget.model.allComplaints.elementAt(index).date,
                   style: TextStyle(

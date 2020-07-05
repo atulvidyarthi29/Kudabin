@@ -5,9 +5,9 @@ import "package:flutter/material.dart";
 import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kudabin/ScopedModels/main_model.dart';
+import 'package:kudabin/Utils/side_drawer.dart';
 
-import 'ScopedModels/main_model.dart';
-import 'Utils/side_drawer.dart';
 
 class PostComplaint extends StatefulWidget {
   final MainModel model;
@@ -21,7 +21,7 @@ class PostComplaint extends StatefulWidget {
 }
 
 class _PostComplaintState extends State<PostComplaint> {
-  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   LocationResult _pickedLocation;
   Completer<GoogleMapController> _controller = Completer();
   List<Marker> allMarkers = [];
@@ -47,7 +47,7 @@ class _PostComplaintState extends State<PostComplaint> {
         iconTheme: new IconThemeData(color: Colors.white),
       ),
       body: Form(
-          key: _formkey,
+          key: _formKey,
           child: Container(
             padding: EdgeInsets.all(10),
             child: ListView(
@@ -243,8 +243,8 @@ class _PostComplaintState extends State<PostComplaint> {
                     ],
                   ),
                   onPressed: () {
-                    _formkey.currentState.validate();
-                    _formkey.currentState.save();
+                    _formKey.currentState.validate();
+                    _formKey.currentState.save();
                   },
                 ),
               ],

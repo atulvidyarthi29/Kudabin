@@ -8,7 +8,7 @@ class ProfileEdit extends StatefulWidget {
 }
 
 class _ProfileEditState extends State<ProfileEdit> {
-  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class _ProfileEditState extends State<ProfileEdit> {
         iconTheme: new IconThemeData(color: Colors.white),
       ),
       body: Form(
-        key: _formkey,
+        key: _formKey,
         child: ListView(
           children: <Widget>[
             Container(
@@ -134,8 +134,8 @@ class _ProfileEditState extends State<ProfileEdit> {
                 ],
               ),
               onPressed: () {
-                _formkey.currentState.validate();
-                _formkey.currentState.save();
+                _formKey.currentState.validate();
+                _formKey.currentState.save();
               },
             )
           ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:kudabin/welcomePage.dart';
+import 'package:kudabin/pages/collection_centers.dart';
+import 'package:kudabin/pages/welcomePage.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:google_map_location_picker/generated/i18n.dart'
     as location_picker;
@@ -40,7 +41,9 @@ class _KudaBinState extends State<KudaBin> {
             Locale('en', ''),
             Locale('ar', ''),
           ],
-          home: WelcomePage(_model),
+          home: _model.isAuthenticated
+              ? CollectionPoints(_model)
+              : WelcomePage(_model),
           debugShowCheckedModeBanner: false),
     );
   }
