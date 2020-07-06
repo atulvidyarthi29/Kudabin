@@ -41,9 +41,24 @@ class _KudaBinState extends State<KudaBin> {
             Locale('en', ''),
             Locale('ar', ''),
           ],
-          home: _model.isAuthenticated
-              ? CollectionPoints(_model)
-              : WelcomePage(_model),
+          home: ScopedModelDescendant(
+              builder: (BuildContext context, Widget widget, MainModel model) {
+            return _model.isAuthenticated
+                ? CollectionPoints(_model)
+                : FutureBuilder(
+                    future: _model.autoAuthenticate(),
+                    builder: (context, authResultSnapShot) {
+                      return authResultSnapShot.connectionState ==
+                              ConnectionState.waiting
+                          ? Scaffold(
+                              body: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            )
+                          : WelcomePage(_model);
+                    },
+                  );
+          }),
           debugShowCheckedModeBanner: false),
     );
   }

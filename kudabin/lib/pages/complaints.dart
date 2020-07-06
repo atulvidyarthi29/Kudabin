@@ -118,7 +118,7 @@ class _ComplaintsState extends State<Complaints> {
         },
         itemCount: widget.model.allComplaints.length,
       ),
-      drawer: SideDrawer(widget.model),
+      drawer: SideDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

@@ -51,7 +51,7 @@ class _RequestsState extends State<Requests> {
         iconTheme: new IconThemeData(color: Colors.white),
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
-      drawer: SideDrawer(widget.model),
+      drawer: SideDrawer(),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

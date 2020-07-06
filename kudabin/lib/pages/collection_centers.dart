@@ -42,7 +42,7 @@ class _CollectionPointsState extends State<CollectionPoints> {
         iconTheme: new IconThemeData(color: Colors.white),
       ),
       body: CollectionCenterMap(widget.model),
-      drawer: SideDrawer(widget.model),
+      drawer: SideDrawer(),
     );
   }
 }

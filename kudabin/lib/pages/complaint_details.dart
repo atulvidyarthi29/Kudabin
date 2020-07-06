@@ -155,7 +155,7 @@ class _ComplaintDetailsState extends State<ComplaintDetails> {
           ],
         ),
       ),
-      drawer: SideDrawer(widget.model),
+      drawer: SideDrawer(),
     );
   }
 }

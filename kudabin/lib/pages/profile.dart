@@ -109,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
-      drawer: SideDrawer(widget.model),
+      drawer: SideDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

@@ -250,7 +250,7 @@ class _PostComplaintState extends State<PostComplaint> {
               ],
             ),
           )),
-      drawer: SideDrawer(widget.model),
+      drawer: SideDrawer(),
     );
   }
 }

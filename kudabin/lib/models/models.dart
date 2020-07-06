@@ -1,4 +1,5 @@
 class Users {
+  String id;
   String username;
   String email;
   String firstName;
@@ -8,11 +9,12 @@ class Users {
   String password;
   String mobileNo;
   String address;
-  String aadharNo;
+  int aadharNo;
   String profilePic;
   String userType;
 
   Users({
+    this.id,
     this.username,
     this.email,
     this.firstName,
