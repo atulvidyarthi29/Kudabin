@@ -3,8 +3,8 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:kudabin/ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/app_logo.dart';
-import 'package:kudabin/pages/collection_centers.dart';
 import 'package:kudabin/pages/loginPage.dart';
+import 'package:kudabin/pages/requests.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -375,7 +375,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => CollectionPoints(model)));
+                            builder: (context) => Requests(model)));
                   else {
                     print("Registration Failed");
                     _showWarning(context, successInformation['message']);

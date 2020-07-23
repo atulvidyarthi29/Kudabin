@@ -1,81 +1,80 @@
+import "dart:async";
+import "dart:convert";
+
+import "package:http/http.dart" as http;
 import 'package:scoped_model/scoped_model.dart';
 
-import '../models/models.dart';
-
 class CollectionCenterModel extends Model {
-  List<CollectionCenter> colCenters = [];
+  List<Map<String, dynamic>> _colCenters = [];
+  bool _managingCenter = false;
 
-  List<CollectionCenter> get collectionCenters {
-    return List.from(colCenters);
+  bool get managingCenter => _managingCenter;
+
+  List<Map<String, dynamic>> get collectionCenters {
+    return List.from(_colCenters);
   }
 
-  void fetchCenter() {
-    colCenters.add(CollectionCenter(
-      id: 1,
-      tag: 'Patna',
-      latitude: 25.5941,
-      longitude: 85.1376,
-      description: "Something",
-    ));
-    colCenters.add(CollectionCenter(
-      id: 2,
-      tag: 'Delhi',
-      latitude: 28.7041,
-      longitude: 77.1025,
-      description: "Something",
-    ));
-    colCenters.add(CollectionCenter(
-      id: 3,
-      tag: 'Lucknow',
-      latitude: 26.8467,
-      longitude: 80.9462,
-      description: "Something",
-    ));
-    colCenters.add(CollectionCenter(
-      id: 4,
-      tag: 'Darbhanga',
-      latitude: 26.1542,
-      longitude: 85.8918,
-      description: "Something",
-    ));
-    colCenters.add(CollectionCenter(
-      id: 5,
-      tag: 'Kanpur',
-      latitude: 26.4499,
-      longitude: 80.3319,
-      description: "Something",
-    ));
-    colCenters.add(CollectionCenter(
-      id: 6,
-      tag: 'Ahemdabad',
-      latitude: 23.0225,
-      longitude: 72.5714,
-      description: "Something",
-    ));
-    colCenters.add(CollectionCenter(
-      id: 7,
-      tag: 'Rachi',
-      latitude: 23.3441,
-      longitude: 85.3096,
-      description: "Something",
-    ));
-    colCenters.add(CollectionCenter(
-      id: 8,
-      tag: 'Indore',
-      latitude: 22.7196,
-      longitude: 75.8577,
-      description: "Something",
-    ));
-    colCenters.add(CollectionCenter(
-      id: 9,
-      tag: 'Gaya',
-      latitude: 24.7914,
-      longitude: 85.0002,
-      description: "Something",
-    ));
+  Future<bool> fetchCenter(token) async {
+    http.Response response =
+        await http.get("https://kudabin.herokuapp.com/cpoints", headers: {
+      "Authorization": "Bearer " + token,
+    });
+    Map<String, dynamic> data = json.decode(response.body);
+    if (response.statusCode == 201) {
+      _colCenters = List.from(data["cPoints"]);
+      return true;
+    }
+    return false;
   }
 
-  void addCenter() {}
+  Future<Map<String, dynamic>> addCenter(
+      token, String address, double latitude, double longitude) async {
+    _managingCenter = true;
+    notifyListeners();
+    http.Response response = await http.post(
+        "https://kudabin.herokuapp.com/cpoints/add-point",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/json"
+        },
+        body: json.encode({
+          "description": address,
+          "latitude": latitude,
+          "longitude": longitude
+        }));
 
-  void removeCenter() {}
+    if (response.statusCode == 201) {
+      fetchCenter(token);
+      _managingCenter = false;
+      notifyListeners();
+      return {"success": true, "message": "Added Successfully"};
+    } else {
+      _managingCenter = false;
+      notifyListeners();
+      return {
+        "success": false,
+        "message":
+            "Something went wrong. Please check your connection and try again"
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> removeCenter(token, id) async {
+    http.Response response = await http.delete(
+        "https://kudabin.herokuapp.com/cpoints/delete-point/" + id,
+        headers: {
+          "Authorization": "Bearer " + token,
+        });
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      fetchCenter(token);
+      return {"success": true, "message": "Added Successfully"};
+    } else
+      return {
+        "success": false,
+        "message":
+            "Something went wrong. Please check your connection and try again"
+      };
+  }
 }

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "183613761143",
+    "firebase_url": "https://kudabin-272111.firebaseio.com",
+    "project_id": "kudabin-272111",
+    "storage_bucket": "kudabin-272111.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:183613761143:android:94e72e5d7cdcc8fe498872",
+        "android_client_info": {
+          "package_name": "com.start.kudabin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "183613761143-0i0107ohoo3p2ep3np2muin137v5srd1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLUvVJaEtdMBKxYGBwfwID6rfuMWFxYyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "183613761143-0i0107ohoo3p2ep3np2muin137v5srd1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

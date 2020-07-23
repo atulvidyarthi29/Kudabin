@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:kudabin/pages/collection_centers.dart';
+import 'package:kudabin/pages/requests.dart';
+import 'package:kudabin/pages/splash_screen.dart';
 import 'package:kudabin/pages/welcomePage.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:google_map_location_picker/generated/i18n.dart'
     as location_picker;
-
+import 'package:flutter/services.dart';
 import 'ScopedModels/main_model.dart';
 
-void main() => runApp(KudaBin());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+  ));
+  runApp(KudaBin());
+}
 
 class KudaBin extends StatefulWidget {
   @override
@@ -44,17 +51,13 @@ class _KudaBinState extends State<KudaBin> {
           home: ScopedModelDescendant(
               builder: (BuildContext context, Widget widget, MainModel model) {
             return _model.isAuthenticated
-                ? CollectionPoints(_model)
+                ? Requests(_model)
                 : FutureBuilder(
                     future: _model.autoAuthenticate(),
                     builder: (context, authResultSnapShot) {
                       return authResultSnapShot.connectionState ==
                               ConnectionState.waiting
-                          ? Scaffold(
-                              body: Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            )
+                          ? SplashScreen()
                           : WelcomePage(_model);
                     },
                   );

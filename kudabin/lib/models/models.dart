@@ -43,21 +43,6 @@ class CollectionAgent {
   });
 }
 
-class CollectionCenter {
-  int id;
-  String tag;
-  double latitude;
-  double longitude;
-  String description;
-
-  CollectionCenter({
-    this.tag,
-    this.id,
-    this.latitude,
-    this.longitude,
-    this.description,
-  });
-}
 
 class Vehicle {
   int id;
@@ -71,31 +56,31 @@ class Vehicle {
   });
 }
 
-class Complaint {
-  int id;
-  String ticketNo;
-  String date;
-  String image;
-  double latitude;
-  double longitude;
-  String body;
-  String title;
-  int complainedBy;
-  String status;
-
-  Complaint({
-    this.id,
-    this.ticketNo,
-    this.date,
-    this.image,
-    this.latitude,
-    this.longitude,
-    this.body,
-    this.title,
-    this.complainedBy,
-    this.status,
-  });
-}
+//class Complaint {
+//  int id;
+//  String ticketNo;
+//  String date;
+//  String image;
+//  double latitude;
+//  double longitude;
+//  String body;
+//  String title;
+//  int complainedBy;
+//  bool status;
+//
+//  Complaint({
+//    this.id,
+//    this.ticketNo,
+//    this.date,
+//    this.image,
+//    this.latitude,
+//    this.longitude,
+//    this.body,
+//    this.title,
+//    this.complainedBy,
+//    this.status,
+//  });
+//}
 
 class Request {
   int id;

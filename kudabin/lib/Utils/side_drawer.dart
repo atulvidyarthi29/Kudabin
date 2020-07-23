@@ -5,8 +5,8 @@ import 'package:kudabin/pages/collection_centers.dart';
 import 'package:kudabin/pages/complaints.dart';
 import 'package:kudabin/pages/profile.dart';
 import 'package:kudabin/pages/requests.dart';
+import 'package:kudabin/pages/splash_screen.dart';
 import 'package:kudabin/pages/welcomePage.dart';
-
 import 'package:kudabin/pages/profile_edit.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -48,7 +48,8 @@ class SideDrawer extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ProfileEdit()));
+                                      builder: (context) =>
+                                          ProfileEdit(model)));
                             },
                             icon: Icon(Icons.edit, color: Colors.white),
                             label: Text("Edit Profile",
@@ -61,8 +62,20 @@ class SideDrawer extends StatelessWidget {
                 ],
               ),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0xfffbb448), Color(0xfff7892b)]),
               ),
+            ),
+            ListTile(
+              title: Text('Request a pickup'),
+              leading: Icon(Icons.directions_car),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Requests(model)));
+              },
             ),
             ListTile(
               title: Text('Collection Centers'),
@@ -72,7 +85,14 @@ class SideDrawer extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => CollectionPoints(model)));
+                        builder: (context) => FutureBuilder(
+                            future: model.fetchCenter(model.token),
+                            builder: (context, authResultSnapShot) {
+                              return authResultSnapShot.connectionState ==
+                                      ConnectionState.waiting
+                                  ? SplashScreen()
+                                  : CollectionPoints(model);
+                            })));
               },
             ),
             ListTile(
@@ -80,17 +100,17 @@ class SideDrawer extends StatelessWidget {
               leading: Icon(Icons.insert_comment),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Complaints(model)));
-              },
-            ),
-            ListTile(
-              title: Text('Request a pickup'),
-              leading: Icon(Icons.directions_car),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Requests(model)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FutureBuilder(
+                            future: model.fetchAllComplaints(model.token),
+                            builder: (context, authResultSnapShot) {
+                              return authResultSnapShot.connectionState ==
+                                      ConnectionState.waiting
+                                  ? SplashScreen()
+                                  : Complaints(model);
+                            })));
               },
             ),
             ListTile(

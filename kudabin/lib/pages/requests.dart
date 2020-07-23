@@ -1,9 +1,11 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kudabin/ScopedModels/main_model.dart';
+import 'package:kudabin/Utils/custom_appbar.dart';
 import 'package:kudabin/Utils/side_drawer.dart';
+import 'package:kudabin/pages/PaymentScreen.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class Requests extends StatefulWidget {
   final MainModel model;
@@ -17,102 +19,280 @@ class Requests extends StatefulWidget {
 }
 
 class _RequestsState extends State<Requests> {
-  int _selectedIndex = 0;
-  static List<Widget> _widgetOptions = <Widget>[
-    TrackMap(),
-    ListView(
-      children: <Widget>[Text("data"), Text("data")],
-    )
-  ];
+  final scaffoldState = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _requestKey = GlobalKey<FormState>();
+  LocationResult _pickedLocation;
+  List<Marker> newMarkers = [];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
+  Widget _dateField() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Address of the Collection Center",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: Theme.of(context).primaryColor),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                fillColor: Color(0xfff3f3f4),
+                filled: true),
+            maxLines: 4,
+            validator: (String value) {
+              if (value.isEmpty) {
+                return "Address is required";
+              }
+              return '';
+            },
+            onChanged: (String value) {
+//              formData["address"] = value;
+            },
+            onSaved: (String value) {
+//              formData["address"] = value;
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _locationPreview() {
+    return (_pickedLocation != null)
+        ? Container(
+            height: 300,
+            decoration: BoxDecoration(
+                border: Border.all(
+              width: 2,
+              color: Theme.of(context).accentColor,
+            )),
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: _pickedLocation.latLng,
+                zoom: 14.4746,
+              ),
+              markers: Set.from(newMarkers),
+            ),
+          )
+        : Container(
+            child: Text(
+              "Location is required.",
+              style: TextStyle(
+                color: Colors.red,
+              ),
+            ),
+          );
+  }
+
+  Widget _locationButton() {
+    return RaisedButton(
+      color: Theme.of(context).accentColor,
+      onPressed: () async {
+        LocationResult result = await showLocationPicker(
+          context,
+          'AIzaSyCb4Hq0N7PkpdBhX-MKq4Hl16eC4x-7qfE',
+          initialCenter: LatLng(31.1975844, 29.9598339),
+          myLocationButtonEnabled: true,
+          layersButtonEnabled: true,
+        );
+        setState(() {
+          _pickedLocation = result;
+          _requestKey.currentState.save();
+          newMarkers.add(Marker(
+            markerId: MarkerId("newId"),
+            draggable: false,
+            position: _pickedLocation.latLng,
+            onTap: null,
+          ));
+        });
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(
+            Icons.location_on,
+            color: Colors.white,
+          ),
+          Text(
+            (_pickedLocation == null) ? 'Locate on Map' : 'Change Location',
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _proceedToPaymentButton() {
+    return ScopedModelDescendant<MainModel>(
+        builder: (BuildContext context, Widget widget, MainModel model) {
+      return InkWell(
+        onTap: () async {
+          if (!_requestKey.currentState.validate() && _pickedLocation == null)
+            return;
+          Map<String, dynamic> response =
+              await model.redirectpayment(model.token);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => PaymentScreen(response["response"])));
+        },
+        child: Container(
+          height: 50,
+          alignment: Alignment.center,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2)
+            ],
+            gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [Color(0xfffbb448), Color(0xfff7892b)]),
+          ),
+          padding: const EdgeInsets.all(10.0),
+          child: Text('Proceed to Payment',
+              style: TextStyle(fontSize: 20, color: Colors.white)),
+        ),
+      );
+    });
+  }
+
+  Widget _requestButton() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+      child: InkWell(
+        onTap: _requestAPickUp,
+        child: Container(
+          height: 50,
+          alignment: Alignment.center,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2)
+            ],
+            gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [Color(0xfffbb448), Color(0xfff7892b)]),
+          ),
+          padding: const EdgeInsets.all(10.0),
+          child: Text('Request a Pickup',
+              style: TextStyle(fontSize: 20, color: Colors.white)),
+        ),
+      ),
+    );
+  }
+
+  void _requestAPickUp() {
+    scaffoldState.currentState.showBottomSheet((context) {
+      return SingleChildScrollView(
+        child: Form(
+          key: _requestKey,
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            padding: EdgeInsets.all(15),
+            child: Column(
+              children: <Widget>[
+                _dateField(),
+                _locationPreview(),
+                _locationButton(),
+                _proceedToPaymentButton(),
+              ],
+            ),
+          ),
+        ),
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Past Orders', style: TextStyle(color: Colors.white)),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.notifications_none, color: Colors.white),
-            onPressed: null,
-            color: Colors.white,
-          ),
-          IconButton(
-            icon: Icon(Icons.more_vert, color: Colors.white),
-            onPressed: null,
-            color: Colors.white,
-          )
-        ],
-        iconTheme: new IconThemeData(color: Colors.white),
-      ),
-      body: _widgetOptions.elementAt(_selectedIndex),
-      drawer: SideDrawer(),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_pin_circle),
-            title: Text('Track'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            title: Text('Past Orders'),
-          ),
-        ],
-        backgroundColor: Theme.of(context).primaryColor,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        unselectedItemColor: Colors.white,
-        selectedItemColor: Theme.of(context).accentColor,
-      ),
-    );
-  }
-}
-
-class TrackMap extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _TrackMapState();
-  }
-}
-
-class _TrackMapState extends State<TrackMap> {
-  Completer<GoogleMapController> _controller = Completer();
-
-  final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-
-  final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
-
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      body: GoogleMap(
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
+      key: scaffoldState,
+      appBar: CustomAppBar("Request"),
+      body: ScopedModelDescendant<MainModel>(
+        builder: (BuildContext context, Widget widget, MainModel model) {
+          return SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+//                Container(
+//                  height: MediaQuery.of(context).size.height * 0.7,
+//                  child: Center(
+//                    child: Text(
+//                      "No past Requests.",
+//                      style: TextStyle(
+//                          fontWeight: FontWeight.w600,
+//                          color: Theme.of(context).accentColor,
+//                          fontSize: 16),
+//                    ),
+//                  ),
+//                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.7,
+                  child: ListView(
+                    children: <Widget>[
+                      ListTile(
+                        title: Text("Pick up on " + "27/85/96"),
+                        leading: Icon(Icons.airport_shuttle),
+                        subtitle: Text("Status - Pending"),
+                      ),
+                      ListTile(
+                        title: Text("Pick up on " + "27/85/96"),
+                        leading: Icon(Icons.airport_shuttle),
+                        subtitle: Text("Status - Pending"),
+                      ),
+                      ListTile(
+                        title: Text("Pick up on " + "27/85/96"),
+                        leading: Icon(Icons.airport_shuttle),
+                        subtitle: Text("Status - Pending"),
+                      ),
+                      ListTile(
+                        title: Text("Pick up on " + "27/85/96"),
+                        leading: Icon(Icons.airport_shuttle),
+                        subtitle: Text("Status - Pending"),
+                      ),
+                      ListTile(
+                        title: Text("Pick up on " + "27/85/96"),
+                        leading: Icon(Icons.airport_shuttle),
+                        subtitle: Text("Status - Pending"),
+                      ),
+                      ListTile(
+                        title: Text("Pick up on " + "27/85/96"),
+                        leading: Icon(Icons.airport_shuttle),
+                        subtitle: Text("Status - Pending"),
+                      ),
+                      ListTile(
+                        title: Text("Pick up on " + "27/85/96"),
+                        leading: Icon(Icons.airport_shuttle),
+                        subtitle: Text("Status - Pending"),
+                      ),
+                    ],
+                  ),
+                ),
+                _requestButton(),
+              ],
+            ),
+          );
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('To the lake!'),
-        icon: Icon(Icons.directions_boat),
-      ),
+      drawer: SideDrawer(),
     );
-  }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }

@@ -90,7 +90,6 @@ class UserModel extends Model {
   Future<bool> autoAuthenticate() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String token = pref.getString("token");
-    print(token);
     if (token != null) {
       Map<String, dynamic> user = json.decode(pref.getString("user"));
       _token = token;

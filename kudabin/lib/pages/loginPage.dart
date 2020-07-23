@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kudabin/ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/app_logo.dart';
-import 'package:kudabin/pages/collection_centers.dart';
+import 'package:kudabin/pages/requests.dart';
 import 'package:kudabin/pages/signup.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -142,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              CollectionPoints(widget.model)));
+                              Requests(widget.model)));
                 else {
                   print("Login Failed");
                   _showWarning(context, successInformation["message"]);
