@@ -1,6 +1,8 @@
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_map_location_picker/google_map_location_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:kudabin/ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/custom_appbar.dart';
 import 'package:kudabin/Utils/side_drawer.dart';
@@ -24,14 +26,51 @@ class _RequestsState extends State<Requests> {
   LocationResult _pickedLocation;
   List<Marker> newMarkers = [];
 
+  DateTime date;
+  String quantity;
+
+  final format = DateFormat("yyyy-mm-dd");
+
   Widget _dateField() {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Date Field (${format.pattern})',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: Theme.of(context).primaryColor),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          DateTimeField(
+            format: format,
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                fillColor: Color(0xfff3f3f4),
+                filled: true),
+            onShowPicker: (context, currentValue) {
+              date = currentValue;
+              return showDatePicker(
+                  context: context,
+                  firstDate: DateTime(1900),
+                  initialDate: currentValue ?? DateTime.now(),
+                  lastDate: DateTime(2100));
+            },
+          ),
+        ]);
+  }
+
+  Widget _quantityField() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "Address of the Collection Center",
+            "Quantity (kg)",
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 15,
@@ -45,18 +84,15 @@ class _RequestsState extends State<Requests> {
                 border: InputBorder.none,
                 fillColor: Color(0xfff3f3f4),
                 filled: true),
-            maxLines: 4,
             validator: (String value) {
               if (value.isEmpty) {
-                return "Address is required";
+                return "Quantity is required";
               }
-              return '';
+              return null;
             },
-            onChanged: (String value) {
-//              formData["address"] = value;
-            },
+            keyboardType: TextInputType.number,
             onSaved: (String value) {
-//              formData["address"] = value;
+              quantity = value;
             },
           ),
         ],
@@ -137,7 +173,12 @@ class _RequestsState extends State<Requests> {
           if (!_requestKey.currentState.validate() && _pickedLocation == null)
             return;
           Map<String, dynamic> response =
-              await model.redirectpayment(model.token);
+              await model.redirectPayment(model.token, {
+            "latitude": _pickedLocation.latLng.latitude,
+            "longitude": _pickedLocation.latLng.longitude,
+            "quantity": quantity,
+            "dateOfPickup": date.toString()
+          });
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -211,6 +252,9 @@ class _RequestsState extends State<Requests> {
             child: Column(
               children: <Widget>[
                 _dateField(),
+                SizedBox(height: 10),
+                _quantityField(),
+                SizedBox(height: 10),
                 _locationPreview(),
                 _locationButton(),
                 _proceedToPaymentButton(),

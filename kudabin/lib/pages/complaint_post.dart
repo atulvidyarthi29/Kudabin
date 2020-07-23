@@ -7,7 +7,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kudabin/ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/custom_appbar.dart';
-import 'package:kudabin/pages/collection_centers.dart';
 import 'package:kudabin/pages/complaints.dart';
 import 'package:kudabin/pages/splash_screen.dart';
 import 'package:scoped_model/scoped_model.dart';

@@ -45,6 +45,7 @@ class SideDrawer extends StatelessWidget {
                           ),
                           FlatButton.icon(
                             onPressed: () {
+                              Navigator.pop(context);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

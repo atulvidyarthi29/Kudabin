@@ -13,20 +13,15 @@ class RequestModel extends Model {
 
   getCurrentRequest() {}
 
-  Future<Map<String, dynamic>> redirectpayment(token) async {
+  Future<Map<String, dynamic>> redirectPayment(
+      String token, Map<String, dynamic> data) async {
     http.Response response = await http.post(
         "https://kudabin.herokuapp.com/request/",
         headers: {
           "Authorization": "Bearer " + token,
           "Content-Type": "application/json"
         },
-        body: json.encode({
-          "latitude": 52.6,
-          "longitude": 82.6,
-          "quantity": 10,
-          "dateOfPickup": "27/02/20"
-        }));
-    print("@@@@@@@@@@@@@@@@");
+        body: json.encode(data));
     print(response.statusCode);
     print(response.body);
     return {"success": true, "response": response.body};
