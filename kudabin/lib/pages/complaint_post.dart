@@ -283,15 +283,11 @@ class _PostComplaintState extends State<PostComplaint> {
           ? CircularProgressIndicator()
           : InkWell(
               onTap: () async {
-                print("@@@@@@@@@@@@@@@@@@@@@@@@@");
                 if (_pickedLocation == null ||
                     !_formKey.currentState.validate()) {
-                  print("#######################");
                   print(_formKey.currentState.validate());
-                  print(_pickedLocation);
                   return;
                 }
-                print("%%%%%%%%%%%%%%%%%%%%%");
                 _formKey.currentState.save();
                 bool successInfo = await model.addComplaint(model.token, {
                   "title": _formData["title"],

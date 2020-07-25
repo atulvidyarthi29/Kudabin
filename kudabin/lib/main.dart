@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:kudabin/pages/collection_centers.dart';
 import 'package:kudabin/pages/splash_screen.dart';
@@ -27,14 +28,16 @@ class KudaBin extends StatefulWidget {
 
 class _KudaBinState extends State<KudaBin> {
   final _model = MainModel();
+  var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   @override
   void initState() {
+//    super.initState();
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-        print(message["notification"]);
+        final notification = message['data'];
         _model.saveNotifications(message["notification"]);
       },
       onLaunch: (Map<String, dynamic> message) async {

@@ -286,22 +286,41 @@ class _RequestsState extends State<Requests> {
                 child: ListView.builder(
                   itemBuilder: (context, index) {
                     print(widget.model.requests);
-                    return ListTile(
-                      title: Text("Pick up on " +
-                          widget.model.requests[index]["dateOfPickup"]),
-                      leading: Icon(Icons.airport_shuttle),
-                      subtitle: Text("Status - Pending"),
-                      trailing: IconButton(
-                          icon: Icon(Icons.map),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => TrackMap(
-                                        widget.model.colRequsts[index],
-                                        widget.model)));
-                          }),
-                    );
+                    return (widget.model.requests[index]["status"] == "G")
+                        ? ListTile(
+                            title: Text("Pick up on " +
+                                widget.model.requests[index]["dateOfPickup"]),
+                            leading: Icon(Icons.airport_shuttle),
+                            subtitle: Text("Status - " +
+                                ((widget.model.requests[index]["status"] == "R")
+                                    ? "To be processed"
+                                    : (widget.model.requests[index]["status"] ==
+                                            "G")
+                                        ? "Arriving today"
+                                        : "Processed")),
+                            trailing: IconButton(
+                                icon: Icon(Icons.map),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TrackMap(
+                                              widget.model.requests[index],
+                                              widget.model)));
+                                }),
+                          )
+                        : ListTile(
+                            title: Text("Pick up on " +
+                                widget.model.requests[index]["dateOfPickup"]),
+                            leading: Icon(Icons.airport_shuttle),
+                            subtitle: Text("Status - " +
+                                ((widget.model.requests[index]["status"] == "R")
+                                    ? "To be processed"
+                                    : (widget.model.requests[index]["status"] ==
+                                            "G")
+                                        ? "Arriving today"
+                                        : "Processed")),
+                          );
                   },
                   itemCount: widget.model.requests.length,
                 )),
