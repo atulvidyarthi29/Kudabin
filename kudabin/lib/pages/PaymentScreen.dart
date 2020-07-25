@@ -1,14 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:kudabin/ScopedModels/main_model.dart';
+import 'package:kudabin/pages/requests.dart';
+import 'package:kudabin/pages/splash_screen.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'Constants.dart';
 
 class PaymentScreen extends StatefulWidget {
   final String data;
+  final MainModel model;
 
-  PaymentScreen(this.data);
+  PaymentScreen(this.data, this.model);
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
@@ -26,15 +30,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void getData() {
     _webController.evaluateJavascript("document.body.innerText").then((data) {
       var decodedJSON = jsonDecode(data);
+      print(decodedJSON);
       Map<String, dynamic> responseJSON = jsonDecode(decodedJSON);
-      final checksumResult = responseJSON["status"];
-      final paytmResponse = responseJSON["data"];
+      print(responseJSON);
+      final paytmResponse = responseJSON["paymentObject"];
       if (paytmResponse["STATUS"] == "TXN_SUCCESS") {
-        if (checksumResult == 0) {
-          _responseStatus = STATUS_SUCCESSFUL;
-        } else {
-          _responseStatus = STATUS_CHECKSUM_FAILED;
-        }
+        _responseStatus = STATUS_SUCCESSFUL;
       } else if (paytmResponse["STATUS"] == "TXN_FAILURE") {
         _responseStatus = STATUS_FAILED;
       }
@@ -45,13 +46,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget getResponseScreen() {
     switch (_responseStatus) {
       case STATUS_SUCCESSFUL:
-        return PaymentSuccessfulScreen();
+        return PaymentSuccessfulScreen(widget.model);
       case STATUS_CHECKSUM_FAILED:
-        return CheckSumFailedScreen();
+        return CheckSumFailedScreen(widget.model);
       case STATUS_FAILED:
-        return PaymentFailedScreen();
+        return PaymentFailedScreen(widget.model);
     }
-    return PaymentSuccessfulScreen();
+    return PaymentSuccessfulScreen(widget.model);
   }
 
   @override
@@ -86,20 +87,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     });
                   }
                 }
-                if (page.contains("/paymentReceipt")) {
+                if (page.contains("/response-payment")) {
                   getData();
                 }
               },
             ),
           ),
-//          (_loadingPayment)
-//              ? Center(
-//                  child: CircularProgressIndicator(),
-//                )
-//              : Center(),
-//          (_responseStatus != STATUS_LOADING)
-//              ? Center(child: getResponseScreen())
-//              : Center()
+          (_responseStatus != STATUS_LOADING)
+              ? Center(child: getResponseScreen())
+              : Center()
         ],
       )),
     );
@@ -107,6 +103,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
 }
 
 class PaymentSuccessfulScreen extends StatelessWidget {
+  final MainModel model;
+
+  PaymentSuccessfulScreen(this.model);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -148,7 +148,17 @@ class PaymentSuccessfulScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
-                    Navigator.popUntil(context, ModalRoute.withName("/"));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FutureBuilder(
+                                future: model.fetchPastRequests(model.token),
+                                builder: (context, authResultSnapShot) {
+                                  return authResultSnapShot.connectionState ==
+                                          ConnectionState.waiting
+                                      ? SplashScreen()
+                                      : Requests(model);
+                                })));
                   })
             ],
           ),
@@ -159,6 +169,10 @@ class PaymentSuccessfulScreen extends StatelessWidget {
 }
 
 class PaymentFailedScreen extends StatelessWidget {
+  final MainModel model;
+
+  PaymentFailedScreen(this.model);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -200,7 +214,17 @@ class PaymentFailedScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
-                    Navigator.popUntil(context, ModalRoute.withName("/"));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FutureBuilder(
+                                future: model.fetchPastRequests(model.token),
+                                builder: (context, authResultSnapShot) {
+                                  return authResultSnapShot.connectionState ==
+                                          ConnectionState.waiting
+                                      ? SplashScreen()
+                                      : Requests(model);
+                                })));
                   })
             ],
           ),
@@ -211,6 +235,10 @@ class PaymentFailedScreen extends StatelessWidget {
 }
 
 class CheckSumFailedScreen extends StatelessWidget {
+  final MainModel model;
+
+  CheckSumFailedScreen(this.model);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -252,7 +280,17 @@ class CheckSumFailedScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
-                    Navigator.popUntil(context, ModalRoute.withName("/"));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FutureBuilder(
+                                future: model.fetchPastRequests(model.token),
+                                builder: (context, authResultSnapShot) {
+                                  return authResultSnapShot.connectionState ==
+                                          ConnectionState.waiting
+                                      ? SplashScreen()
+                                      : Requests(model);
+                                })));
                   })
             ],
           ),

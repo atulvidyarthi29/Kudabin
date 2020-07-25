@@ -3,8 +3,9 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:kudabin/ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/app_logo.dart';
+import 'package:kudabin/pages/collection_centers.dart';
 import 'package:kudabin/pages/loginPage.dart';
-import 'package:kudabin/pages/requests.dart';
+import 'package:kudabin/pages/splash_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -35,7 +36,6 @@ class _SignUpPageState extends State<SignUpPage> {
     "profilePic": null,
     "userType": null,
   };
-  String _dateOfBirth = "hi";
 
   _showWarning(BuildContext context, String error) {
     showDialog(
@@ -208,39 +208,6 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _dobPicker() {
-    return Row(
-      children: <Widget>[
-        IconButton(
-          icon: Icon(Icons.cake),
-          color: Theme.of(context).primaryColor,
-          onPressed: () {
-            DatePicker.showDatePicker(
-              context,
-              showTitleActions: true,
-              minTime: DateTime(1940, 1, 1),
-              maxTime: DateTime.now(),
-              onChanged: (date) {
-                var formatter = new DateFormat('yyyy-MM-dd');
-                String changedDate = formatter.format(date);
-                setState(() {
-                  _dateOfBirth = changedDate;
-                });
-                print('change $date');
-              },
-              onConfirm: (date) {
-                var formatter = new DateFormat('yyyy-MM-dd');
-                _formData["dob"] = formatter.format(date);
-              },
-              locale: LocaleType.en,
-            );
-          },
-        ),
-        Text(_dateOfBirth),
-      ],
-    );
-  }
-
   Widget _genderField() {
     List<String> _genders = ["Male", "Female", "Others"];
     return Container(
@@ -375,7 +342,14 @@ class _SignUpPageState extends State<SignUpPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Requests(model)));
+                            builder: (context) => FutureBuilder(
+                                future: model.fetchCenter(model.token),
+                                builder: (context, authResultSnapShot) {
+                                  return authResultSnapShot.connectionState ==
+                                          ConnectionState.waiting
+                                      ? SplashScreen()
+                                      : CollectionPoints(model);
+                                })));
                   else {
                     print("Registration Failed");
                     _showWarning(context, successInformation['message']);
@@ -469,7 +443,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 _emailField(),
                 _firstNameField(),
                 _lastNameField(),
-//              _dobPicker(),
                 _genderField(),
                 _passwordField(),
                 _confirmPasswordField(),

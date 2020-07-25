@@ -10,8 +10,20 @@ class UserModel extends Model {
   bool _isAuthenticated = false;
   bool _loading = false;
   String _token;
+  String _deviceId;
+  bool _notify = false;
 
   Users _loggedInUser;
+
+  List<Map<String, dynamic>> _notifcations = [];
+
+  bool get notify {
+    return _notify;
+  }
+
+  List<Map<String, dynamic>> get notifications {
+    return List.from(_notifcations);
+  }
 
   Users get loggedInUser {
     return _loggedInUser;
@@ -29,6 +41,16 @@ class UserModel extends Model {
     return _token;
   }
 
+  void saveDeviceId(String device_id) {
+    _deviceId = device_id;
+  }
+
+  void saveNotifications(Map<String, dynamic> data) {
+    _notify = true;
+    notifyListeners();
+    _notifcations.insert(0, data);
+  }
+
   Future<Map<String, dynamic>> authenticate(
       String email, String password) async {
     _loading = true;
@@ -40,6 +62,7 @@ class UserModel extends Model {
             body: json.encode({
               "email": email,
               "password": password,
+              "deviceToken": _deviceId,
             }));
     Map<String, dynamic> body = json.decode(response.body);
     if (response.statusCode == 200) {

@@ -176,48 +176,48 @@ class _ProfileEditState extends State<ProfileEdit> {
     );
   }
 
-  Widget _genderField() {
-    List<String> _genders = ["Male", "Female", "Others"];
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            "Gender",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-                color: Theme.of(context).primaryColor),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          DropdownButtonFormField<String>(
-            items: _genders.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            onChanged: (String newValue) {
-              setState(() {
-                _formData["gender"] = newValue;
-              });
-            },
-            value: _formData["gender"],
-            onSaved: (value) {
-              _formData["gender"] = value;
-            },
-            decoration: InputDecoration(
-                border: InputBorder.none,
-                fillColor: Color(0xfff3f3f4),
-                filled: true),
-          ),
-        ],
-      ),
-    );
-  }
+//  Widget _genderField() {
+//    List<String> _genders = ["Male", "Female", "Others"];
+//    return Container(
+//      margin: EdgeInsets.symmetric(vertical: 10),
+//      child: Column(
+//        crossAxisAlignment: CrossAxisAlignment.start,
+//        children: <Widget>[
+//          Text(
+//            "Gender",
+//            style: TextStyle(
+//                fontWeight: FontWeight.bold,
+//                fontSize: 15,
+//                color: Theme.of(context).primaryColor),
+//          ),
+//          SizedBox(
+//            height: 10,
+//          ),
+//          DropdownButtonFormField<String>(
+//            items: _genders.map((String value) {
+//              return DropdownMenuItem<String>(
+//                value: value,
+//                child: Text(value),
+//              );
+//            }).toList(),
+//            onChanged: (String newValue) {
+//              setState(() {
+//                _formData["gender"] = newValue;
+//              });
+//            },
+//            value: _formData["gender"],
+//            onSaved: (value) {
+//              _formData["gender"] = value;
+//            },
+//            decoration: InputDecoration(
+//                border: InputBorder.none,
+//                fillColor: Color(0xfff3f3f4),
+//                filled: true),
+//          ),
+//        ],
+//      ),
+//    );
+//  }
 
   Widget _submitButton() {
     return ScopedModelDescendant<MainModel>(
@@ -284,7 +284,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                 _emailField(),
                 _firstNameField(),
                 _lastNameField(),
-                _genderField(),
+//                _genderField(),
                 _submitButton(),
               ],
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kudabin/ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/app_logo.dart';
+import 'package:kudabin/pages/collection_agent_requests.dart';
 import 'package:kudabin/pages/collection_centers.dart';
 import 'package:kudabin/pages/complaints.dart';
 import 'package:kudabin/pages/profile.dart';
@@ -70,15 +71,6 @@ class SideDrawer extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: Text('Request a pickup'),
-              leading: Icon(Icons.directions_car),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Requests(model)));
-              },
-            ),
-            ListTile(
               title: Text('Collection Centers'),
               leading: Icon(Icons.store_mall_directory),
               onTap: () {
@@ -96,6 +88,48 @@ class SideDrawer extends StatelessWidget {
                             })));
               },
             ),
+            (model.loggedInUser.userType == "cAgent")
+                ? ListTile(
+                    title: Text('Requests'),
+                    leading: Icon(Icons.directions_car),
+                    onTap: () {
+                      DateTime date = DateTime.now();
+
+                      String strDate = "${date.day}-${date.month}-${date.year}";
+
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FutureBuilder(
+                                  future: model.fetchCollectionAgentRequests(
+                                      model.token, strDate),
+                                  builder: (context, authResultSnapShot) {
+                                    return authResultSnapShot.connectionState ==
+                                            ConnectionState.waiting
+                                        ? SplashScreen()
+                                        : CollectionAgentRequests(model);
+                                  })));
+                    },
+                  )
+                : ListTile(
+                    title: Text('Request a pickup'),
+                    leading: Icon(Icons.directions_car),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FutureBuilder(
+                                  future: model.fetchPastRequests(model.token),
+                                  builder: (context, authResultSnapShot) {
+                                    return authResultSnapShot.connectionState ==
+                                            ConnectionState.waiting
+                                        ? SplashScreen()
+                                        : Requests(model);
+                                  })));
+                    },
+                  ),
             ListTile(
               title: Text('Your complaints'),
               leading: Icon(Icons.insert_comment),

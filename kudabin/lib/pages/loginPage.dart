@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kudabin/ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/app_logo.dart';
-import 'package:kudabin/pages/requests.dart';
+import 'package:kudabin/pages/collection_centers.dart';
 import 'package:kudabin/pages/signup.dart';
+import 'package:kudabin/pages/splash_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class LoginPage extends StatefulWidget {
@@ -141,8 +142,14 @@ class _LoginPageState extends State<LoginPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              Requests(widget.model)));
+                          builder: (context) => FutureBuilder(
+                              future: model.fetchCenter(model.token),
+                              builder: (context, authResultSnapShot) {
+                                return authResultSnapShot.connectionState ==
+                                        ConnectionState.waiting
+                                    ? SplashScreen()
+                                    : CollectionPoints(model);
+                              })));
                 else {
                   print("Login Failed");
                   _showWarning(context, successInformation["message"]);

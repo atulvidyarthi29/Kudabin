@@ -7,6 +7,7 @@ import 'package:kudabin/ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/custom_appbar.dart';
 import 'package:kudabin/Utils/side_drawer.dart';
 import 'package:kudabin/pages/PaymentScreen.dart';
+import 'package:kudabin/pages/tracker.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class Requests extends StatefulWidget {
@@ -29,7 +30,7 @@ class _RequestsState extends State<Requests> {
   DateTime date;
   String quantity;
 
-  final format = DateFormat("yyyy-mm-dd");
+  final format = DateFormat("yyyy-MM-dd");
 
   Widget _dateField() {
     return Column(
@@ -51,11 +52,13 @@ class _RequestsState extends State<Requests> {
                 border: InputBorder.none,
                 fillColor: Color(0xfff3f3f4),
                 filled: true),
-            onShowPicker: (context, currentValue) {
+            onSaved: (currentValue) {
               date = currentValue;
+            },
+            onShowPicker: (context, currentValue) {
               return showDatePicker(
                   context: context,
-                  firstDate: DateTime(1900),
+                  firstDate: DateTime.now(),
                   initialDate: currentValue ?? DateTime.now(),
                   lastDate: DateTime(2100));
             },
@@ -168,45 +171,49 @@ class _RequestsState extends State<Requests> {
   Widget _proceedToPaymentButton() {
     return ScopedModelDescendant<MainModel>(
         builder: (BuildContext context, Widget widget, MainModel model) {
-      return InkWell(
-        onTap: () async {
-          if (!_requestKey.currentState.validate() && _pickedLocation == null)
-            return;
-          Map<String, dynamic> response =
-              await model.redirectPayment(model.token, {
-            "latitude": _pickedLocation.latLng.latitude,
-            "longitude": _pickedLocation.latLng.longitude,
-            "quantity": quantity,
-            "dateOfPickup": date.toString()
-          });
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => PaymentScreen(response["response"])));
-        },
-        child: Container(
-          height: 50,
-          alignment: Alignment.center,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [Color(0xfffbb448), Color(0xfff7892b)]),
-          ),
-          padding: const EdgeInsets.all(10.0),
-          child: Text('Proceed to Payment',
-              style: TextStyle(fontSize: 20, color: Colors.white)),
-        ),
-      );
+      return model.requestLoader
+          ? CircularProgressIndicator()
+          : InkWell(
+              onTap: () async {
+                if (!_requestKey.currentState.validate() &&
+                    _pickedLocation == null) return;
+                _requestKey.currentState.save();
+                Map<String, dynamic> response =
+                    await model.redirectPayment(model.token, {
+                  "latitude": _pickedLocation.latLng.latitude,
+                  "longitude": _pickedLocation.latLng.longitude,
+                  "quantity": quantity,
+                  "dateOfPickup": "${date.day}-${date.month}-${date.year}"
+                });
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            PaymentScreen(response["response"], model)));
+              },
+              child: Container(
+                height: 50,
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: Colors.grey.shade200,
+                        offset: Offset(2, 4),
+                        blurRadius: 5,
+                        spreadRadius: 2)
+                  ],
+                  gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [Color(0xfffbb448), Color(0xfff7892b)]),
+                ),
+                padding: const EdgeInsets.all(10.0),
+                child: Text('Proceed to Payment',
+                    style: TextStyle(fontSize: 20, color: Colors.white)),
+              ),
+            );
     });
   }
 
@@ -270,71 +277,37 @@ class _RequestsState extends State<Requests> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldState,
-      appBar: CustomAppBar("Request"),
-      body: ScopedModelDescendant<MainModel>(
-        builder: (BuildContext context, Widget widget, MainModel model) {
-          return SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-//                Container(
-//                  height: MediaQuery.of(context).size.height * 0.7,
-//                  child: Center(
-//                    child: Text(
-//                      "No past Requests.",
-//                      style: TextStyle(
-//                          fontWeight: FontWeight.w600,
-//                          color: Theme.of(context).accentColor,
-//                          fontSize: 16),
-//                    ),
-//                  ),
-//                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.7,
-                  child: ListView(
-                    children: <Widget>[
-                      ListTile(
-                        title: Text("Pick up on " + "27/85/96"),
-                        leading: Icon(Icons.airport_shuttle),
-                        subtitle: Text("Status - Pending"),
-                      ),
-                      ListTile(
-                        title: Text("Pick up on " + "27/85/96"),
-                        leading: Icon(Icons.airport_shuttle),
-                        subtitle: Text("Status - Pending"),
-                      ),
-                      ListTile(
-                        title: Text("Pick up on " + "27/85/96"),
-                        leading: Icon(Icons.airport_shuttle),
-                        subtitle: Text("Status - Pending"),
-                      ),
-                      ListTile(
-                        title: Text("Pick up on " + "27/85/96"),
-                        leading: Icon(Icons.airport_shuttle),
-                        subtitle: Text("Status - Pending"),
-                      ),
-                      ListTile(
-                        title: Text("Pick up on " + "27/85/96"),
-                        leading: Icon(Icons.airport_shuttle),
-                        subtitle: Text("Status - Pending"),
-                      ),
-                      ListTile(
-                        title: Text("Pick up on " + "27/85/96"),
-                        leading: Icon(Icons.airport_shuttle),
-                        subtitle: Text("Status - Pending"),
-                      ),
-                      ListTile(
-                        title: Text("Pick up on " + "27/85/96"),
-                        leading: Icon(Icons.airport_shuttle),
-                        subtitle: Text("Status - Pending"),
-                      ),
-                    ],
-                  ),
-                ),
-                _requestButton(),
-              ],
-            ),
-          );
-        },
+      appBar: CustomAppBar("Requests"),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    print(widget.model.requests);
+                    return ListTile(
+                      title: Text("Pick up on " +
+                          widget.model.requests[index]["dateOfPickup"]),
+                      leading: Icon(Icons.airport_shuttle),
+                      subtitle: Text("Status - Pending"),
+                      trailing: IconButton(
+                          icon: Icon(Icons.map),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TrackMap(
+                                        widget.model.colRequsts[index],
+                                        widget.model)));
+                          }),
+                    );
+                  },
+                  itemCount: widget.model.requests.length,
+                )),
+            _requestButton(),
+          ],
+        ),
       ),
       drawer: SideDrawer(),
     );

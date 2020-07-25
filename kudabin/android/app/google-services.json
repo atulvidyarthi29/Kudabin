@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:183613761143:android:94e72e5d7cdcc8fe498872",
+        "mobilesdk_app_id": "1:183613761143:android:77fa5f8ca6e2bd70498872",
         "android_client_info": {
-          "package_name": "com.start.kudabin"
+          "package_name": "com.example.kudabin"
         }
       },
       "oauth_client": [
