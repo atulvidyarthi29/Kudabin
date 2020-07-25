@@ -154,9 +154,38 @@ class _ComplaintDetailsState extends State<ComplaintDetails> {
                       width: MediaQuery.of(context).size.width,
                     ),
                   ),
+                  SizedBox(height: 10),
                 ],
               ),
             ),
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.all(6),
+                    child: Text(
+                      "Feedback",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      widget.model.allComplaints
+                          .elementAt(widget.index)["feedback"],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                ],
+              ),
+            )
           ],
         ),
       ),

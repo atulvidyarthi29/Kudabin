@@ -33,6 +33,9 @@ class _TrackMapState extends State<TrackMap> {
   @override
   void initState() {
     super.initState();
+//    if(widget.model.loggedInUser.userType == "cAgent"){
+//      firebaseDB.child(widget.model.loggedInUser.id).set();
+//    }
     _allMarkers.add(Marker(
         markerId: MarkerId("Destination"),
         draggable: false,
