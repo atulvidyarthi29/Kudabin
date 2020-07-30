@@ -25,42 +25,58 @@ class _CollectionAgentRequestsState extends State<CollectionAgentRequests> {
         child: ListView.builder(
             itemBuilder: (context, index) {
               print(widget.model.colRequsts);
-              return ListTile(
-                title: Text("Pick up on " +
-                    widget.model.colRequsts[index]["dateOfPickup"]),
-                leading: Icon(Icons.airport_shuttle),
-                subtitle: Text("Status - " +
-                    ((widget.model.colRequsts[index]["status"] == "R")
-                        ? "To be processed"
-                        : (widget.model.colRequsts[index]["status"] == "G")
-                            ? "Arriving today"
-                            : "Processed")),
-                trailing: IconButton(
-                    icon: Icon(Icons.map),
-                    onPressed: () async {
-                      if (widget.model.colRequsts[index]["status"] == "R") {
-                        bool success = await widget.model.startProcessing(
-                            widget.model.token,
-                            widget.model.colRequsts[index]["_id"]);
-                        if (success) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TrackMap(
-                                      widget.model.colRequsts[index],
-                                      widget.model)));
-                        } else {
-                          print("Something went wrong");
-                        }
-                      } else {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    TrackMap(widget.model.colRequsts[index], widget.model)));
-                      }
-                    }),
-              );
+              return (widget.model.colRequsts[index]["status"] != "B")
+                  ? ListTile(
+                      title: Text("Pick up on " +
+                          widget.model.colRequsts[index]["dateOfPickup"]),
+                      leading: Icon(Icons.airport_shuttle),
+                      subtitle: Text("Status - " +
+                          ((widget.model.colRequsts[index]["status"] == "R")
+                              ? "To be processed"
+                              : (widget.model.colRequsts[index]["status"] ==
+                                      "G")
+                                  ? "Arriving today"
+                                  : "Processed")),
+                      trailing: IconButton(
+                          icon: Icon(Icons.map),
+                          onPressed: () async {
+                            if (widget.model.colRequsts[index]["status"] ==
+                                "R") {
+                              bool success = await widget.model.startProcessing(
+                                  widget.model.token,
+                                  widget.model.colRequsts[index]["_id"]);
+                              if (success) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => TrackMap(
+                                            widget.model.colRequsts[index],
+                                            widget.model)));
+                              } else {
+                                print("Something went wrong");
+                              }
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TrackMap(
+                                          widget.model.colRequsts[index],
+                                          widget.model)));
+                            }
+                          }),
+                    )
+                  : ListTile(
+                      title: Text("Pick up on " +
+                          widget.model.colRequsts[index]["dateOfPickup"]),
+                      leading: Icon(Icons.airport_shuttle),
+                      subtitle: Text("Status - " +
+                          ((widget.model.colRequsts[index]["status"] == "R")
+                              ? "To be processed"
+                              : (widget.model.colRequsts[index]["status"] ==
+                                      "G")
+                                  ? "Arriving today"
+                                  : "Processed")),
+                    );
             },
             itemCount: widget.model.colRequsts.length),
       ),

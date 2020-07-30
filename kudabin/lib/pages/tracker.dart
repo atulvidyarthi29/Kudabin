@@ -8,6 +8,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kudabin/ScopedModels/main_model.dart';
 import 'package:kudabin/Utils/custom_appbar.dart';
 import 'package:kudabin/Utils/side_drawer.dart';
+import 'package:kudabin/pages/collection_agent_requests.dart';
+import 'package:kudabin/pages/splash_screen.dart';
 
 class TrackMap extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -33,9 +35,6 @@ class _TrackMapState extends State<TrackMap> {
   @override
   void initState() {
     super.initState();
-//    if(widget.model.loggedInUser.userType == "cAgent"){
-//      firebaseDB.child(widget.model.loggedInUser.id).set();
-//    }
     _allMarkers.add(Marker(
         markerId: MarkerId("Destination"),
         draggable: false,
@@ -139,16 +138,55 @@ class _TrackMapState extends State<TrackMap> {
             zoom: 9,
           ),
           markers: Set.from(_allMarkers),
-          polylines: Set<Polyline>.of(polylines.values),
+//          polylines: Set<Polyline>.of(polylines.values),
         ),
       ),
       drawer: SideDrawer(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (widget.model.loggedInUser.userType == 'cAgent')
-            ? _trackCurrentLocation
-            : _trackCollectionAgent,
-        child: Icon(Icons.location_searching),
-      ),
+      floatingActionButton: (widget.model.loggedInUser.userType == 'cAgent')
+          ? Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 100,
+                ),
+                FloatingActionButton(
+                  heroTag: null,
+                  onPressed: () async {
+                    DateTime date = DateTime.now();
+
+                    String strDate = "${date.day}-${date.month}-${date.year}";
+                    bool success = await widget.model.finishProcessing(
+                        widget.model.token, widget.data["_id"]);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => FutureBuilder(
+                            future: widget.model.fetchCollectionAgentRequests(
+                                widget.model.token, strDate),
+                            builder: (context, authResultSnapShot) {
+                              return authResultSnapShot.connectionState ==
+                                      ConnectionState.waiting
+                                  ? SplashScreen()
+                                  : CollectionAgentRequests(widget.model);
+                            })));
+                  },
+                  child: Icon(Icons.exit_to_app),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                FloatingActionButton(
+                  heroTag: null,
+                  onPressed: (widget.model.loggedInUser.userType == 'cAgent')
+                      ? _trackCurrentLocation
+                      : _trackCollectionAgent,
+                  child: Icon(Icons.location_searching),
+                ),
+              ],
+            )
+          : FloatingActionButton(
+              onPressed: (widget.model.loggedInUser.userType == 'cAgent')
+                  ? _trackCurrentLocation
+                  : _trackCollectionAgent,
+              child: Icon(Icons.location_searching),
+            ),
     );
   }
 

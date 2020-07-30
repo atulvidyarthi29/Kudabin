@@ -91,4 +91,15 @@ class RequestModel extends Model {
     if (response.statusCode == 200) return true;
     return false;
   }
+
+  Future<bool> finishProcessing(String token, String id) async {
+    http.Response response = await http.get(
+        "https://kudabin.herokuapp.com/request/end-request/" + id,
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/json"
+        });
+
+    return (response.statusCode == 200) ? true : false;
+  }
 }
